@@ -40,7 +40,7 @@ const credsSchema = z.object({
 const DEMOS = [
   { label: "Student", email: "aman.patel@college.edu" },
   { label: "Defaulter student", email: "sara.khan@college.edu" },
-  { label: "Faculty", email: "n.iyer@college.edu" },
+  { label: "Faculty", email: "sneha.iyer@college.edu" },
   { label: "Admin", email: "admin@college.edu" },
 ];
 const DEMO_PASSWORD = "attendo123";
