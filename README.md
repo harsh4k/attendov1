@@ -2,7 +2,7 @@
 
 A college attendance management system — students, faculty, and admins each get a dedicated dashboard for tracking lectures and attendance.
 
-**Live:** https://attendov1.lovable.app
+**Live:** https://attendov1.vercel.app/
 
 ## Roles & Features
 
@@ -21,7 +21,6 @@ A college attendance management system — students, faculty, and admins each ge
 - Supabase (Postgres, Auth, RLS)
 - Bun
 
-Built with [Lovable](https://lovable.dev) — every change made in the Lovable editor is committed straight to this repository, and pushes to `main` sync back into Lovable.
 
 ## Development
 
