@@ -1,26 +1,39 @@
-# Project Revive
+# Attendo ("Project Revive")
 
-fix this and mke it working
+A college attendance management system — students, faculty, and admins each get a dedicated dashboard for tracking lectures and attendance.
 
-This project was built with [Lovable](https://lovable.dev).
+**Live:** https://attendov1.lovable.app
 
-**Live app**: https://attendov1.lovable.app
+## Roles & Features
 
-## Build with Lovable
+- **Students** — view enrolled subjects, attendance history, and defaulter status
+- **Faculty** — manage subjects, schedule/run lectures, mark attendance
+- **Admin** — oversee users, roles, subjects, and faculty assignments
+- Role-based auth (`student` / `faculty` / `admin`) with row-level security in Postgres
+- Data model: profiles, user roles, students, faculty, subjects, faculty-subject assignments, enrollments, lectures (scheduled/ongoing/completed/cancelled), attendance (present/absent), notifications
 
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/e05647d1-664e-4576-9c2e-ea55b762d8da).
+## Tech Stack
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+- Vite + React + TypeScript
+- TanStack Start / TanStack Router + TanStack Query
+- shadcn/ui (Radix primitives) + Tailwind CSS
+- react-hook-form + Zod
+- Supabase (Postgres, Auth, RLS)
+- Bun
+
+Built with [Lovable](https://lovable.dev) — every change made in the Lovable editor is committed straight to this repository, and pushes to `main` sync back into Lovable.
 
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
-
 ```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
+git clone https://github.com/harsh4k/attendov1.git
+cd attendov1
+bun install
+bun run dev
 ```
+
+Requires a Supabase project — see `supabase/config.toml` and the `supabase/migrations/` folder for the schema to apply.
+
+## Continue in Lovable
+
+[lovable.dev/projects/e05647d1-664e-4576-9c2e-ea55b762d8da](https://lovable.dev/projects/e05647d1-664e-4576-9c2e-ea55b762d8da)
