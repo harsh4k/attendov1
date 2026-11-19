@@ -12,9 +12,15 @@ export const Route = createFileRoute("/_authenticated/defaulters")({
   head: () => ({
     meta: [
       { title: "Defaulters — Attendo" },
-      { name: "description", content: "Students below the 75% attendance threshold with recovery targets." },
+      {
+        name: "description",
+        content: "Students below the 75% attendance threshold with recovery targets.",
+      },
       { property: "og:title", content: "Defaulters — Attendo" },
-      { property: "og:description", content: "Track at-risk students and their recovery lectures." },
+      {
+        property: "og:description",
+        content: "Track at-risk students and their recovery lectures.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

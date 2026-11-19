@@ -6,3 +6,7 @@ pnpm-lock.yaml
 package-lock.json
 bun.lock
 routeTree.gen.ts
+
+# Files managed by Lovable or generated from Supabase
+src/integrations/lovable/index.ts
+src/integrations/supabase/*.ts

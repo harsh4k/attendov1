@@ -19,15 +19,9 @@ export const getMe = createServerFn({ method: "GET" })
       return { registered: false as const };
     }
 
-    const { data: roles } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId);
+    const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", userId);
 
-    const role = (roles?.[0]?.role ?? profile.pending_role) as
-      | "student"
-      | "faculty"
-      | "admin";
+    const role = (roles?.[0]?.role ?? profile.pending_role) as "student" | "faculty" | "admin";
 
     const { data: student } = await supabase
       .from("students")
@@ -133,7 +127,7 @@ export const getStudentData = createServerFn({ method: "GET" })
 /** Student self-marking. All rules are enforced again by the database trigger. */
 export const markAttendance = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { lectureId: string }) =>
+  .validator((input: { lectureId: string }) =>
     z.object({ lectureId: z.string().uuid() }).parse(input),
   )
   .handler(async ({ data, context }) => {
@@ -204,7 +198,14 @@ export const getFacultyData = createServerFn({ method: "GET" })
     }
 
     if (subjectIds.length === 0) {
-      return { faculty: faculty ?? null, subjects: [], lectures: [], students: [], attendance: [], enrollments: [] };
+      return {
+        faculty: faculty ?? null,
+        subjects: [],
+        lectures: [],
+        students: [],
+        attendance: [],
+        enrollments: [],
+      };
     }
 
     const { data: subjects } = await supabase
@@ -242,13 +243,15 @@ export const getFacultyData = createServerFn({ method: "GET" })
       subjects: subjects ?? [],
       lectures: lectures ?? [],
       enrollments: enrollments ?? [],
-      students: ((studentRows ?? []) as unknown as Array<{
-        id: string;
-        roll_number: string;
-        semester: number;
-        division: string;
-        profile: { full_name: string; email: string } | null;
-      }>).map((s) => ({
+      students: (
+        (studentRows ?? []) as unknown as Array<{
+          id: string;
+          roll_number: string;
+          semester: number;
+          division: string;
+          profile: { full_name: string; email: string } | null;
+        }>
+      ).map((s) => ({
         id: s.id,
         roll_number: s.roll_number,
         semester: s.semester,
@@ -263,7 +266,7 @@ export const getFacultyData = createServerFn({ method: "GET" })
 /** Faculty/admin correction of a single attendance record. */
 export const setAttendance = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { lectureId: string; studentId: string; status: "present" | "absent" }) =>
+  .validator((input: { lectureId: string; studentId: string; status: "present" | "absent" }) =>
     z
       .object({
         lectureId: z.string().uuid(),
@@ -301,7 +304,7 @@ export const setAttendance = createServerFn({ method: "POST" })
 
 export const saveLecture = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(
+  .validator(
     (input: {
       id?: string;
       subjectId: string;
@@ -330,9 +333,9 @@ export const saveLecture = createServerFn({ method: "POST" })
       .select("id, profile:profile_id(user_id)")
       .limit(200);
     const facultyId =
-      ((faculty ?? []) as unknown as Array<{ id: string; profile: { user_id: string } | null }>).find(
-        (f) => f.profile?.user_id === context.userId,
-      )?.id ?? null;
+      (
+        (faculty ?? []) as unknown as Array<{ id: string; profile: { user_id: string } | null }>
+      ).find((f) => f.profile?.user_id === context.userId)?.id ?? null;
 
     const payload = {
       subject_id: data.subjectId,
@@ -349,14 +352,18 @@ export const saveLecture = createServerFn({ method: "POST" })
       if (error) throw new Error(error.message);
       return { ok: true, id: data.id };
     }
-    const { data: row, error } = await supabase.from("lectures").insert(payload).select("id").single();
+    const { data: row, error } = await supabase
+      .from("lectures")
+      .insert(payload)
+      .select("id")
+      .single();
     if (error) throw new Error(error.message);
     return { ok: true, id: row.id };
   });
 
 export const setLectureStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { id: string; status: "scheduled" | "ongoing" | "completed" | "cancelled" }) =>
+  .validator((input: { id: string; status: "scheduled" | "ongoing" | "completed" | "cancelled" }) =>
     z
       .object({
         id: z.string().uuid(),
@@ -381,33 +388,40 @@ export const getAdminData = createServerFn({ method: "GET" })
     const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", userId);
     if (!(roles ?? []).some((r) => r.role === "admin")) throw new Error("Forbidden");
 
-    const [{ data: students }, { data: faculty }, { data: subjects }, { data: lectures }, { data: fs }] =
-      await Promise.all([
-        supabase
-          .from("students")
-          .select("id, roll_number, semester, division, profile:profile_id(full_name, email)")
-          .order("roll_number"),
-        supabase
-          .from("faculty")
-          .select("id, employee_id, department, profile:profile_id(full_name, email)")
-          .order("employee_id"),
-        supabase.from("subjects").select("id, name, code, semester, division").order("code"),
-        supabase
-          .from("lectures")
-          .select("id, subject_id, faculty_id, lecture_date, start_time, end_time, topic, status")
-          .order("lecture_date", { ascending: false })
-          .limit(300),
-        supabase.from("faculty_subjects").select("faculty_id, subject_id"),
-      ]);
+    const [
+      { data: students },
+      { data: faculty },
+      { data: subjects },
+      { data: lectures },
+      { data: fs },
+    ] = await Promise.all([
+      supabase
+        .from("students")
+        .select("id, roll_number, semester, division, profile:profile_id(full_name, email)")
+        .order("roll_number"),
+      supabase
+        .from("faculty")
+        .select("id, employee_id, department, profile:profile_id(full_name, email)")
+        .order("employee_id"),
+      supabase.from("subjects").select("id, name, code, semester, division").order("code"),
+      supabase
+        .from("lectures")
+        .select("id, subject_id, faculty_id, lecture_date, start_time, end_time, topic, status")
+        .order("lecture_date", { ascending: false })
+        .limit(300),
+      supabase.from("faculty_subjects").select("faculty_id, subject_id"),
+    ]);
 
     return {
-      students: ((students ?? []) as unknown as Array<{
-        id: string;
-        roll_number: string;
-        semester: number;
-        division: string;
-        profile: { full_name: string; email: string } | null;
-      }>).map((s) => ({
+      students: (
+        (students ?? []) as unknown as Array<{
+          id: string;
+          roll_number: string;
+          semester: number;
+          division: string;
+          profile: { full_name: string; email: string } | null;
+        }>
+      ).map((s) => ({
         id: s.id,
         roll_number: s.roll_number,
         semester: s.semester,
@@ -415,12 +429,14 @@ export const getAdminData = createServerFn({ method: "GET" })
         full_name: s.profile?.full_name ?? "",
         email: s.profile?.email ?? "",
       })),
-      faculty: ((faculty ?? []) as unknown as Array<{
-        id: string;
-        employee_id: string;
-        department: string;
-        profile: { full_name: string; email: string } | null;
-      }>).map((f) => ({
+      faculty: (
+        (faculty ?? []) as unknown as Array<{
+          id: string;
+          employee_id: string;
+          department: string;
+          profile: { full_name: string; email: string } | null;
+        }>
+      ).map((f) => ({
         id: f.id,
         employee_id: f.employee_id,
         department: f.department,
@@ -435,7 +451,7 @@ export const getAdminData = createServerFn({ method: "GET" })
 
 export const createSubject = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { name: string; code: string; semester: number; division: string }) =>
+  .validator((input: { name: string; code: string; semester: number; division: string }) =>
     z
       .object({
         name: z.string().trim().min(2).max(80),
@@ -454,7 +470,7 @@ export const createSubject = createServerFn({ method: "POST" })
 /** Admin: register a person in the directory so they can sign up and be linked. */
 export const createDirectoryEntry = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(
+  .validator(
     (input: {
       fullName: string;
       email: string;
@@ -520,7 +536,7 @@ export const createDirectoryEntry = createServerFn({ method: "POST" })
 
 export const markNotificationRead = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
+  .validator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     await context.supabase.from("notifications").update({ read: true }).eq("id", data.id);
     return { ok: true };

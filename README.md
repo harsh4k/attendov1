@@ -6,7 +6,7 @@ A college attendance management system — students, faculty, and admins each ge
 
 ## Roles & Features
 
-- **Students** — view enrolled subjects, attendance history, and defaulter status
+- **Students** — view enrolled subjects, attendance history, and defaulter status. The attendance target is 80%. Students below 75% are flagged as defaulters.
 - **Faculty** — manage subjects, schedule/run lectures, mark attendance
 - **Admin** — oversee users, roles, subjects, and faculty assignments
 - Role-based auth (`student` / `faculty` / `admin`) with row-level security in Postgres
@@ -24,14 +24,25 @@ A college attendance management system — students, faculty, and admins each ge
 
 ## Development
 
+Install [Bun](https://bun.sh/). Use a separate development Supabase project so local testing does not write to the hosted demo.
+
 ```sh
 git clone https://github.com/harsh4k/attendov1.git
 cd attendov1
-bun install
+bun install --frozen-lockfile
 bun run dev
 ```
 
-Requires a Supabase project — see `supabase/config.toml` and the `supabase/migrations/` folder for the schema to apply.
+Apply the SQL files in [`supabase/migrations/`](supabase/migrations/) in filename order to the development project. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` for the browser, and `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` for server-side session validation. Use demo accounts for each role to test the dashboards.
+
+```sh
+bun run lint
+bun run build
+```
+
+## License
+
+Attendo’s original application code is available under the [MIT License](LICENSE). Third-party packages and assets retain their own terms. The license covers application code, independent of student records or institutional data. See [third-party notices](THIRD-PARTY-NOTICES.md) for the included shadcn/ui components.
 
 ## Continue in Lovable
 

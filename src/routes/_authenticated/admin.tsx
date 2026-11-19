@@ -30,7 +30,9 @@ function AdminPage() {
         ) : (
           <>
             <section className="space-y-3">
-              <h2 className="font-serif text-xl tracking-tight">Students ({data.students.length})</h2>
+              <h2 className="font-serif text-xl tracking-tight">
+                Students ({data.students.length})
+              </h2>
               <div className="overflow-hidden rounded-xl border border-border bg-card">
                 {data.students.map((s) => (
                   <div
@@ -70,7 +72,9 @@ function AdminPage() {
             </section>
 
             <section className="space-y-3">
-              <h2 className="font-serif text-xl tracking-tight">Subjects ({data.subjects.length})</h2>
+              <h2 className="font-serif text-xl tracking-tight">
+                Subjects ({data.subjects.length})
+              </h2>
               <div className="overflow-hidden rounded-xl border border-border bg-card">
                 {data.subjects.map((s) => (
                   <div

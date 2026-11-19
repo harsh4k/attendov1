@@ -47,7 +47,7 @@ export function calculateSafeMisses(
 
 export function getAttendanceStatus(percentage: number | null): AttendanceStatus {
   if (percentage === null) return "NO_DATA";
-  if (percentage >= 80) return "SAFE";
+  if (percentage >= ATTENDANCE_TARGET * 100) return "SAFE";
   if (percentage >= DEFAULTER_THRESHOLD) return "WARNING";
   return "DEFAULTER";
 }

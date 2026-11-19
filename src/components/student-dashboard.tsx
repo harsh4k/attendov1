@@ -129,7 +129,9 @@ export function StudentDashboard() {
           <h2 className="font-serif text-xl tracking-tight">Recovery plan</h2>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
             Attend the next{" "}
-            <span className="font-semibold text-foreground">{overall.recoveryLectures} lectures</span>{" "}
+            <span className="font-semibold text-foreground">
+              {overall.recoveryLectures} lectures
+            </span>{" "}
             without missing one to move from {formatPercentage(overall.percentage)} back to 80%.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -139,8 +141,8 @@ export function StudentDashboard() {
                 <div key={p.subject.id} className="rounded-lg border border-border bg-card p-4">
                   <p className="text-sm font-medium">{p.subject.name}</p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    {formatPercentage(p.summary.percentage)} · attend{" "}
-                    {p.summary.recoveryLectures} more
+                    {formatPercentage(p.summary.percentage)} · attend {p.summary.recoveryLectures}{" "}
+                    more
                   </p>
                 </div>
               ))}

@@ -65,8 +65,16 @@ export function StaffDashboard({ role, name }: { role: string; name: string }) {
       </header>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Subjects" value={data.subjects.length} icon={<BookOpen className="size-4" />} />
-        <StatCard label="Students" value={data.students.length} icon={<Users className="size-4" />} />
+        <StatCard
+          label="Subjects"
+          value={data.subjects.length}
+          icon={<BookOpen className="size-4" />}
+        />
+        <StatCard
+          label="Students"
+          value={data.students.length}
+          icon={<Users className="size-4" />}
+        />
         <StatCard
           label="Class average"
           value={formatPercentage(overallAvg)}
@@ -85,7 +93,10 @@ export function StaffDashboard({ role, name }: { role: string; name: string }) {
       <section className="space-y-3">
         <h2 className="font-serif text-xl tracking-tight">Subjects</h2>
         {subjectStats.length === 0 ? (
-          <EmptyState title="No subjects assigned" body="Ask an administrator to assign subjects." />
+          <EmptyState
+            title="No subjects assigned"
+            body="Ask an administrator to assign subjects."
+          />
         ) : (
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {subjectStats.map((s) => (
@@ -118,7 +129,7 @@ export function StaffDashboard({ role, name }: { role: string; name: string }) {
       <section className="space-y-3">
         <h2 className="font-serif text-xl tracking-tight">Students at risk</h2>
         {defaulters.length === 0 ? (
-          <EmptyState title="No defaulters" body="Every student is above the 75% threshold." />
+          <EmptyState title="No defaulters" body="No student with attendance data is below 75%." />
         ) : (
           <div className="overflow-hidden rounded-xl border border-border bg-card">
             {defaulters.map(({ student, summary }) => (
@@ -129,7 +140,8 @@ export function StaffDashboard({ role, name }: { role: string; name: string }) {
                 <div className="min-w-0">
                   <p className="truncate text-sm font-medium">{student.full_name}</p>
                   <p className="text-xs text-muted-foreground">
-                    Roll {student.roll_number} · attend {summary.recoveryLectures} lectures to recover
+                    Roll {student.roll_number} · attend {summary.recoveryLectures} lectures to
+                    recover
                   </p>
                 </div>
                 <div className="flex items-center gap-3">
