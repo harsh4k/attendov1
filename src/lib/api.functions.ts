@@ -127,7 +127,7 @@ export const getStudentData = createServerFn({ method: "GET" })
 /** Student self-marking. All rules are enforced again by the database trigger. */
 export const markAttendance = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { lectureId: string }) =>
+  .validator((input: { lectureId: string }) =>
     z.object({ lectureId: z.string().uuid() }).parse(input),
   )
   .handler(async ({ data, context }) => {
@@ -266,7 +266,7 @@ export const getFacultyData = createServerFn({ method: "GET" })
 /** Faculty/admin correction of a single attendance record. */
 export const setAttendance = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { lectureId: string; studentId: string; status: "present" | "absent" }) =>
+  .validator((input: { lectureId: string; studentId: string; status: "present" | "absent" }) =>
     z
       .object({
         lectureId: z.string().uuid(),
@@ -304,7 +304,7 @@ export const setAttendance = createServerFn({ method: "POST" })
 
 export const saveLecture = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(
+  .validator(
     (input: {
       id?: string;
       subjectId: string;
@@ -363,14 +363,13 @@ export const saveLecture = createServerFn({ method: "POST" })
 
 export const setLectureStatus = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(
-    (input: { id: string; status: "scheduled" | "ongoing" | "completed" | "cancelled" }) =>
-      z
-        .object({
-          id: z.string().uuid(),
-          status: z.enum(["scheduled", "ongoing", "completed", "cancelled"]),
-        })
-        .parse(input),
+  .validator((input: { id: string; status: "scheduled" | "ongoing" | "completed" | "cancelled" }) =>
+    z
+      .object({
+        id: z.string().uuid(),
+        status: z.enum(["scheduled", "ongoing", "completed", "cancelled"]),
+      })
+      .parse(input),
   )
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase
@@ -452,7 +451,7 @@ export const getAdminData = createServerFn({ method: "GET" })
 
 export const createSubject = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { name: string; code: string; semester: number; division: string }) =>
+  .validator((input: { name: string; code: string; semester: number; division: string }) =>
     z
       .object({
         name: z.string().trim().min(2).max(80),
@@ -471,7 +470,7 @@ export const createSubject = createServerFn({ method: "POST" })
 /** Admin: register a person in the directory so they can sign up and be linked. */
 export const createDirectoryEntry = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator(
+  .validator(
     (input: {
       fullName: string;
       email: string;
@@ -537,7 +536,7 @@ export const createDirectoryEntry = createServerFn({ method: "POST" })
 
 export const markNotificationRead = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
+  .validator((input: { id: string }) => z.object({ id: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     await context.supabase.from("notifications").update({ read: true }).eq("id", data.id);
     return { ok: true };
