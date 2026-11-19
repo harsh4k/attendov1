@@ -23,7 +23,11 @@ import { cn } from "@/lib/utils";
 type NavItem = { to: string; label: string; icon: ReactNode };
 
 function navFor(role: string): NavItem[] {
-  const dash = { to: "/dashboard", label: "Dashboard", icon: <LayoutDashboard className="size-4" /> };
+  const dash = {
+    to: "/dashboard",
+    label: "Dashboard",
+    icon: <LayoutDashboard className="size-4" />,
+  };
   if (role === "student") {
     return [
       dash,
@@ -124,7 +128,12 @@ export function AppShell({ children }: { children: ReactNode }) {
           <p className="truncate text-xs text-muted-foreground">
             {me?.registered ? me.profile.email : ""}
           </p>
-          <Button variant="ghost" size="sm" className="mt-2 w-full justify-start gap-2" onClick={signOut}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mt-2 w-full justify-start gap-2"
+            onClick={signOut}
+          >
             <LogOut className="size-4" /> Sign out
           </Button>
         </div>
@@ -144,7 +153,12 @@ export function AppShell({ children }: { children: ReactNode }) {
                 <div className="mt-8">
                   <NavLinks items={items} onNavigate={() => setOpen(false)} />
                 </div>
-                <Button variant="ghost" size="sm" className="mt-6 w-full justify-start gap-2" onClick={signOut}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mt-6 w-full justify-start gap-2"
+                  onClick={signOut}
+                >
                   <LogOut className="size-4" /> Sign out
                 </Button>
               </SheetContent>

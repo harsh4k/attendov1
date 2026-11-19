@@ -12,7 +12,10 @@ export const Route = createFileRoute("/_authenticated/history")({
       { title: "Attendance history — Attendo" },
       { name: "description", content: "Full lecture-by-lecture attendance history." },
       { property: "og:title", content: "Attendance history — Attendo" },
-      { property: "og:description", content: "Every lecture, marked present, absent or cancelled." },
+      {
+        property: "og:description",
+        content: "Every lecture, marked present, absent or cancelled.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -29,7 +32,11 @@ function HistoryPage() {
     const subjects = new Map(data.subjects.map((s) => [s.id, s]));
     return (data.lectures as Lecture[])
       .filter((l) => l.status !== "scheduled")
-      .map((l) => ({ lecture: l, subject: subjects.get(l.subject_id), record: byLecture.get(l.id) }));
+      .map((l) => ({
+        lecture: l,
+        subject: subjects.get(l.subject_id),
+        record: byLecture.get(l.id),
+      }));
   }, [data]);
 
   return (

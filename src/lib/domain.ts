@@ -68,12 +68,7 @@ export function hasEnded(l: Lecture, now = new Date()): boolean {
 }
 export const MARK_WINDOW_MS = 2 * 60 * 60 * 1000;
 
-export type MarkingState =
-  | "marked"
-  | "available"
-  | "not_ended"
-  | "cancelled"
-  | "expired";
+export type MarkingState = "marked" | "available" | "not_ended" | "cancelled" | "expired";
 
 export function markingState(
   l: Lecture,
@@ -92,10 +87,7 @@ export function countableLectures(lectures: Lecture[], now = new Date()): Lectur
   return lectures.filter((l) => l.status === "completed" && hasEnded(l, now));
 }
 
-export function summarizeFrom(
-  lectures: Lecture[],
-  attendance: AttendanceRow[],
-): AttendanceSummary {
+export function summarizeFrom(lectures: Lecture[], attendance: AttendanceRow[]): AttendanceSummary {
   const conducted = countableLectures(lectures);
   const present = new Set(
     attendance.filter((a) => a.status === "present").map((a) => a.lecture_id),
